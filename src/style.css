@@ -1,5 +1,31 @@
-@import "bootstrap/dist/css/bootstrap.min.css";
-
 body{
-    background: white;
+    background-color: green;
+}
+.bckg{
+    /* background-color: green; */
+    height: 20vh;
+}
+
+.card{
+    background-color: white;
+    border: 5px;
+    border-color: black;
+}
+
+
+.negro{    
+    color: black;   
+    font-size: 30px;
+}
+
+
+.rojo{
+    color: red;
+    font-size: 30px;
+}
+
+
+.num{
+    font-size: 50px;
+
 }
