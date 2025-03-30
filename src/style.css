@@ -1,10 +1,6 @@
 body{
     background-color: green;
 }
-.bckg{
-    /* background-color: green; */
-    height: 20vh;
-}
 
 .card{
     background-color: white;
@@ -29,3 +25,9 @@ body{
     font-size: 50px;
 
 }
+
+hr {
+    border: 0;
+    border-top: 5px solid #000000;
+    margin: 20px 0;
+  }

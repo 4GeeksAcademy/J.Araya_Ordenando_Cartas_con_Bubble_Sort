@@ -1,11 +1,6 @@
 let estadoInicial;
 let cartas;
-let symbolColor = {
-    "♠": true,
-    "♣": true,
-    "♥": false,
-    "♦": false
-};
+
 let crearUnaCarta = (numeroDeCarta) => {
 
     let symbol = ["♠", "♣", "♥", "♦"];
@@ -18,21 +13,41 @@ let crearUnaCarta = (numeroDeCarta) => {
 
     let cardHead = document.getElementById(`cardHead${numeroDeCarta}`)
     cardHead.innerHTML = cartaEscogida.pinta
+    if (cartaEscogida.pinta === "♠" || cartaEscogida.pinta === "♣") {
+        cardHead.classList.remove("rojo")
+        cardHead.classList.add("negro");
+    } else {
+        cardHead.classList.remove("negro")
+        cardHead.classList.add("rojo");
+    }
 
-    // if (symbolColor[cartaEscogida.pinta]) {
-    //     cardHead.classList.add("negro");
-    //   } else {
-    //     cardHead.classList.add("rojo");
-    //   }
-      
+
 
     let cardNum = document.getElementById(`cardNum${numeroDeCarta}`)
-    cardNum.innerHTML = cartaEscogida.numero
+    if (cartaEscogida.numero == 1) {
+        cardNum.innerHTML = "A"
+    } else if (cartaEscogida.numero == 11) {
+        cardNum.innerHTML = "J"
+    } else if (cartaEscogida.numero == 12) {
+        cardNum.innerHTML = "Q"
+    } else if (cartaEscogida.numero == 13) {
+        cardNum.innerHTML = "K"
+    } else {
+        cardNum.innerHTML = cartaEscogida.numero
+    }
     cardNum.classList.add("num")
+
+
 
     let cardFoot = document.getElementById(`cardFoot${numeroDeCarta}`)
     cardFoot.innerHTML = cartaEscogida.pinta
-    // symbolColor[cartaEscogida.pinta] ? cardFoot.classList.add("negro") : cardFoot.classList.add("rojo")
+    if (cartaEscogida.pinta === "♠" || cartaEscogida.pinta === "♣") {
+        cardFoot.classList.remove("rojo")
+        cardFoot.classList.add("negro");
+    } else {
+        cardFoot.classList.remove("negro")
+        cardFoot.classList.add("rojo");
+    }
 }
 
 let crearNcartas = (cantidad) => {
@@ -43,11 +58,11 @@ let crearNcartas = (cantidad) => {
             listaDeCartasCreadas.push({
                 "number": document.getElementById("carta0").querySelector(`#cardNum${i}`).innerText,
                 "symbol": document.getElementById("carta0").querySelector(`#cardHead${i}`).innerText,
-              })
+            })
         } else {
             let nuevoDiv = document.createElement("div")
             nuevoDiv.id = `carta${i}`
-            nuevoDiv.classList.add("col", "m-1")
+            nuevoDiv.classList.add("col-2", "m-1")
             nuevoDiv.innerHTML = document.getElementById("carta0").innerHTML
             nuevoDiv.querySelector("#cardHead0").id = `cardHead${i}`;
             nuevoDiv.querySelector("#cardNum0").id = `cardNum${i}`;
@@ -57,7 +72,7 @@ let crearNcartas = (cantidad) => {
             listaDeCartasCreadas.push({
                 "number": nuevoDiv.querySelector(`#cardNum${i}`).innerText,
                 "symbol": nuevoDiv.querySelector(`#cardHead${i}`).innerText,
-              })
+            })
         }
     }
     return listaDeCartasCreadas
@@ -66,64 +81,122 @@ let crearNcartas = (cantidad) => {
 let bubbleSort = (arr) => {
     let listaParaLosLogs = [JSON.parse(JSON.stringify(arr))]
     let wall = arr.length - 1; //iniciamos el wall o muro al final del arr
-    while (wall > 0) {
-      for (let i = 0; i < wall; i++) {
-        if (parseInt(arr[i].number) > parseInt(arr[i + 1].number)) {
-          let aux = arr[i];
-          arr[i] = arr[i + 1];
-          arr[i + 1] = aux;
-          listaParaLosLogs.push(JSON.parse(JSON.stringify(arr)));
+    let arrASoloNumeros = []
+    for (let i = 0; i < arr.length; i++) {
+        if (!isNaN(arr[i].number)) {
+            arrASoloNumeros.push(arr[i])
+        } else {
+            if (arr[i].number == "A") {
+                arr[i].number = 1
+                arrASoloNumeros.push(arr[i])
+            } else if (arr[i].number == "J") {
+                arr[i].number = 11
+                arrASoloNumeros.push(arr[i])
+            } if (arr[i].number == "Q") {
+                arr[i].number = 12
+                arrASoloNumeros.push(arr[i])
+            } if (arr[i].number == "K") {
+                arr[i].number = 13
+                arrASoloNumeros.push(arr[i])
+            }
         }
-  
-      }
-      wall--; //disminuir la pared para optimizar
+
+    }
+    while (wall > 0) {
+        for (let i = 0; i < wall; i++) {
+            if (parseInt(arrASoloNumeros[i].number) > parseInt(arrASoloNumeros[i + 1].number)) {
+                let aux = arrASoloNumeros[i];
+                arrASoloNumeros[i] = arrASoloNumeros[i + 1];
+                arrASoloNumeros[i + 1] = aux;
+                listaParaLosLogs.push(JSON.parse(JSON.stringify(arrASoloNumeros)));
+            }
+
+        }
+        wall--; //disminuir la pared para optimizar
     }
     return listaParaLosLogs;
-  };
+};
 
-let ordenarCartas  = (arr) =>{
+let ordenarCartas = (arr) => {
+    let lineaSeparador = document.createElement("hr")
+    lineaSeparador.classList.add("hr")
+    document.getElementById("fila0").appendChild(lineaSeparador)
     let nuevoDiv = document.createElement("div")
     nuevoDiv.id = "ConsoleLog"
-    nuevoDiv.innerHTML="ConsoleLog"
+    nuevoDiv.innerHTML = "<h1><strong>ConsoleLog</strong></h1>"
+    nuevoDiv.classList.add("row", "m-1")
     document.getElementById("fila0").appendChild(nuevoDiv)
-for (let i = 0; i < arr.length; i++) {
-    let divSeparador = document.createElement("div")
-    divSeparador.id = `groupCard${i+1}`
-    divSeparador.classList.add("bckg","d-flex","justify-content-start")
-    document.getElementById("fila0").appendChild(divSeparador)
-    for (let j = 0; j < arr[i].length; j++) {
+    for (let i = 0; i < arr.length; i++) {
+        let lineaSeparador = document.createElement("hr")
+        lineaSeparador.classList.add("hr")
+        document.getElementById("fila0").appendChild(lineaSeparador)
+        let divSeparador = document.createElement("div")
+        divSeparador.id = `groupCard${i + 1}`
+        divSeparador.classList.add("bckg", "d-flex", "justify-content-start", "row")
+        document.getElementById("fila0").appendChild(divSeparador)
+        for (let j = 0; j < arr[i].length; j++) {
             let nuevoDiv = document.createElement("div")
             nuevoDiv.id = `carta${i},${j}`
-            nuevoDiv.classList.add("col", "m-1")
+            nuevoDiv.classList.add("col-2", "m-1")
             nuevoDiv.innerHTML = document.getElementById("carta0").innerHTML
-            document.getElementById(`groupCard${i+1}`).appendChild(nuevoDiv);
+            document.getElementById(`groupCard${i + 1}`).appendChild(nuevoDiv);
             nuevoDiv.querySelector("#cardHead0").id = `cardHead${i},${j}`;
             nuevoDiv.querySelector("#cardNum0").id = `cardNum${i},${j}`;
             nuevoDiv.querySelector("#cardFoot0").id = `cardFoot${i},${j}`;
-            document.getElementById(`cardHead${i},${j}`).innerHTML=arr[i][j].symbol;
-            document.getElementById(`cardNum${i},${j}`).innerHTML = arr[i][j].number;
+
+            if (arr[i][j].symbol === "♠" || arr[i][j].symbol === "♣") {
+                document.getElementById(`cardHead${i},${j}`).classList.remove("rojo")
+                document.getElementById(`cardHead${i},${j}`).classList.add("negro");
+            } else {
+                document.getElementById(`cardHead${i},${j}`).classList.remove("negro")
+                document.getElementById(`cardHead${i},${j}`).classList.add("rojo");
+            }
+            document.getElementById(`cardHead${i},${j}`).innerHTML = arr[i][j].symbol;
+
+            if (arr[i][j].number == 1) {
+                document.getElementById(`cardNum${i},${j}`).innerHTML = "A"
+            } else if (arr[i][j].number == 11) {
+                document.getElementById(`cardNum${i},${j}`).innerHTML = "J"
+            } else if (arr[i][j].number == 12) {
+                document.getElementById(`cardNum${i},${j}`).innerHTML = "Q"
+            } else if (arr[i][j].number == 13) {
+                document.getElementById(`cardNum${i},${j}`).innerHTML = "K"
+            } else {
+                document.getElementById(`cardNum${i},${j}`).innerHTML = arr[i][j].number;
+            }
+
+            if (arr[i][j].symbol === "♠" || arr[i][j].symbol === "♣") {
+                document.getElementById(`cardFoot${i},${j}`).classList.remove("rojo")
+                document.getElementById(`cardFoot${i},${j}`).classList.add("negro");
+            } else {
+                document.getElementById(`cardFoot${i},${j}`).classList.remove("negro")
+                document.getElementById(`cardFoot${i},${j}`).classList.add("rojo");
+            }
             document.getElementById(`cardFoot${i},${j}`).innerHTML = arr[i][j].symbol;
         }
-   
-}
+
+    }
 
 }
 
 window.addEventListener("DOMContentLoaded", () => {
     estadoInicial = document.getElementById("fila0").innerHTML;
-  });
+});
 
-let limpiar = ()=>{
-    document.getElementById("fila0").innerHTML=estadoInicial;
+let limpiar = () => {
+    document.getElementById("fila0").innerHTML = estadoInicial;
 }
 
-document.getElementById("draw").addEventListener("click", () =>{
+document.getElementById("draw").addEventListener("click", () => {
     limpiar()
     cartas = crearNcartas(parseInt(document.getElementById("cantidad").value))
 })
 
-document.getElementById("sort").addEventListener("click", ()=>{
+document.getElementById("sort").addEventListener("click", () => {
     ordenarCartas(bubbleSort(cartas))
 })
 
-// crearNcartas(5)
+document.getElementById("clean").addEventListener("click", () => {
+    limpiar()
+    document.getElementById("cantidad").value=""
+})
